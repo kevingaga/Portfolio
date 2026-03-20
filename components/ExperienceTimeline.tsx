@@ -10,9 +10,11 @@ type Experience = (typeof profile.experiences)[number];
 function TimelineItem({
   experience,
   index,
+  lang,
 }: {
   experience: Experience;
   index: number;
+  lang: "en" | "fr";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
@@ -25,10 +27,7 @@ function TimelineItem({
       transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
       className="relative pl-8 pb-8 last:pb-0 group"
     >
-      {/* Timeline line */}
       <div className="absolute left-0 top-0 bottom-0 w-px bg-[var(--border)] group-last:hidden" />
-
-      {/* Dot */}
       <motion.div
         initial={{ scale: 0 }}
         animate={isInView ? { scale: 1 } : { scale: 0 }}
@@ -37,7 +36,6 @@ function TimelineItem({
         style={{ boxShadow: "0 0 8px rgba(56,189,248,0.4)" }}
       />
 
-      {/* Content */}
       <div className="glass rounded-xl p-5 hover:border-[rgba(56,189,248,0.2)] transition-all duration-300">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
           <div>
@@ -67,7 +65,7 @@ function TimelineItem({
         </div>
 
         <ul className="space-y-1.5">
-          {experience.highlights.map((highlight, i) => (
+          {experience.highlights[lang].map((highlight, i) => (
             <li key={i} className="flex items-start gap-2 text-xs font-mono text-[var(--muted)] leading-relaxed">
               <span className="text-[var(--accent3)] flex-shrink-0 mt-0.5">▸</span>
               <span>{highlight}</span>
@@ -80,12 +78,12 @@ function TimelineItem({
 }
 
 export default function ExperienceTimeline() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
 
   return (
     <div className="relative">
       {profile.experiences.map((exp, index) => (
-        <TimelineItem key={index} experience={exp} index={index} />
+        <TimelineItem key={index} experience={exp} index={index} lang={lang} />
       ))}
 
       {/* Education entry */}

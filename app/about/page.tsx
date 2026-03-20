@@ -156,10 +156,10 @@ export default function AboutPage() {
                 {a.languages_label}
               </h3>
               <div className="space-y-3">
-                {profile.languages.map((lang, i) => (
+                {profile.languages.map((l, i) => (
                   <div key={i} className="flex items-center justify-between">
                     <span className="text-sm font-mono text-[var(--text)] font-medium">
-                      {lang.lang}
+                      {l.lang}
                     </span>
                     <span
                       className="text-xs font-mono px-2.5 py-0.5 rounded-full"
@@ -169,7 +169,7 @@ export default function AboutPage() {
                         border: "1px solid rgba(56, 189, 248, 0.2)",
                       }}
                     >
-                      {lang.level}
+                      {l.level[lang]}
                     </span>
                   </div>
                 ))}
@@ -187,7 +187,7 @@ export default function AboutPage() {
                 {a.interests_label}
               </h3>
               <div className="flex flex-wrap gap-2">
-                {profile.interests.map((interest, i) => (
+                {profile.interests[lang].map((interest, i) => (
                   <span
                     key={i}
                     className="text-xs font-mono px-3 py-1.5 rounded-full text-slate-300 hover:text-[var(--text)] transition-colors duration-200"
@@ -291,7 +291,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-5">
                 {profile.skills.map((skill, i) => (
-                  <SkillBar key={i} name={skill.name} level={skill.level} />
+                  <SkillBar key={i} name={typeof skill.name === "string" ? skill.name : skill.name[lang]} level={skill.level} />
                 ))}
               </div>
             </motion.div>

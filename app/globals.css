@@ -38,7 +38,7 @@ body {
   background-size: 28px 28px;
   color: var(--text);
   font-family: var(--font-jetbrains), 'JetBrains Mono', monospace;
-  cursor: none;
+  cursor:none;
   overflow-x: hidden;
 }
 
