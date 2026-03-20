@@ -4,24 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/data/projects";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-type Category = "Tous" | "Data & Visualisation" | "Data Engineering" | "Automatisation & IA" | "Applications Métier";
-
-const categories: Category[] = [
-  "Tous",
-  "Data & Visualisation",
-  "Data Engineering",
-  "Automatisation & IA",
-  "Applications Métier",
-];
-
-const categoryLabels: Record<string, string> = {
-  "Tous": "Tous",
-  "Data & Visualisation": "Data & Viz",
-  "Data Engineering": "Data Engineering",
-  "Automatisation & IA": "Automatisation",
-  "Applications Métier": "Apps Métier",
-};
+type Category = "all" | "Data & Visualisation" | "Data Engineering" | "Automatisation & IA" | "Applications Métier";
 
 function getCategoryAccent(category: string): string {
   switch (category) {
@@ -33,26 +18,28 @@ function getCategoryAccent(category: string): string {
   }
 }
 
-function StatusBadge({ status }: { status: "deployed" | "wip" | "archived" }) {
-  const map = {
-    deployed: { label: "Déployé", className: "badge-deployed" },
-    wip: { label: "En cours", className: "badge-wip" },
-    archived: { label: "Archivé", className: "badge-archived" },
-  };
-  const { label, className } = map[status];
-  return (
-    <span className={`text-[10px] font-mono font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full ${className}`}>
-      {label}
-    </span>
-  );
-}
-
 export default function ProjectsPage() {
-  const [activeCategory, setActiveCategory] = useState<Category>("Tous");
+  const [activeCategory, setActiveCategory] = useState<Category>("all");
+  const { t } = useLanguage();
+  const pp = t.projects_page;
+
+  const categories: { key: Category; label: string }[] = [
+    { key: "all", label: pp.category_labels.all },
+    { key: "Data & Visualisation", label: pp.category_labels["Data & Visualisation"] },
+    { key: "Data Engineering", label: pp.category_labels["Data Engineering"] },
+    { key: "Automatisation & IA", label: pp.category_labels["Automatisation & IA"] },
+    { key: "Applications Métier", label: pp.category_labels["Applications Métier"] },
+  ];
 
   const filtered = projects.filter(
-    (p) => activeCategory === "Tous" || p.category === activeCategory
+    (p) => activeCategory === "all" || p.category === activeCategory
   );
+
+  const statusMap = {
+    deployed: { label: t.status.deployed, className: "badge-deployed" },
+    wip: { label: t.status.wip, className: "badge-wip" },
+    archived: { label: t.status.archived, className: "badge-archived" },
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-20">
@@ -65,13 +52,13 @@ export default function ProjectsPage() {
           className="mb-12"
         >
           <span className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest block mb-3">
-            Portfolio
+            {pp.label}
           </span>
           <h1 className="font-epilogue font-black text-4xl sm:text-5xl text-[var(--text)] tracking-tight mb-4">
-            Projets
+            {pp.title}
           </h1>
           <p className="text-sm font-mono text-[var(--muted)] max-w-xl leading-relaxed">
-            {projects.length} projets couvrant la gouvernance data, le data engineering, l&apos;automatisation et les applications métier.
+            {pp.description(projects.length)}
           </p>
         </motion.div>
 
@@ -82,13 +69,13 @@ export default function ProjectsPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex flex-wrap gap-2 mb-10"
         >
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat;
-            const accent = cat === "Tous" ? "var(--accent)" : getCategoryAccent(cat);
+          {categories.map(({ key, label }) => {
+            const isActive = activeCategory === key;
+            const accent = key === "all" ? "var(--accent)" : getCategoryAccent(key);
             return (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
+                key={key}
+                onClick={() => setActiveCategory(key)}
                 className="relative px-4 py-2 rounded-lg text-sm font-mono transition-all duration-200"
                 style={{
                   color: isActive ? accent : "var(--muted)",
@@ -96,8 +83,8 @@ export default function ProjectsPage() {
                   border: isActive ? `1px solid ${accent}35` : "1px solid var(--border)",
                 }}
               >
-                {categoryLabels[cat]}
-                {isActive && cat !== "Tous" && (
+                {label}
+                {isActive && key !== "all" && (
                   <motion.span
                     layoutId="filter-indicator"
                     className="absolute inset-0 rounded-lg"
@@ -112,7 +99,7 @@ export default function ProjectsPage() {
             );
           })}
           <span className="ml-auto text-xs font-mono text-[var(--muted)] self-center">
-            {filtered.length} projet{filtered.length > 1 ? "s" : ""}
+            {pp.count(filtered.length)}
           </span>
         </motion.div>
 
@@ -122,22 +109,21 @@ export default function ProjectsPage() {
             className="glass rounded-xl overflow-hidden"
             style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.2)" }}
           >
-            {/* Table header */}
             <div
               className="grid grid-cols-[3rem_1fr_auto_auto_auto_auto] gap-4 px-6 py-3 border-b border-[var(--border)]"
               style={{ background: "rgba(15, 21, 32, 0.6)" }}
             >
-              {["N°", "Titre", "Catégorie", "Tags", "Gouvernance", "Statut"].map((h) => (
+              {pp.table_headers.map((h) => (
                 <span key={h} className="text-[10px] font-mono text-[var(--muted)] uppercase tracking-widest">
                   {h}
                 </span>
               ))}
             </div>
 
-            {/* Rows */}
             <AnimatePresence mode="popLayout">
               {filtered.map((project, index) => {
                 const accent = getCategoryAccent(project.category);
+                const { label: statusLabel, className: statusClass } = statusMap[project.status];
                 return (
                   <motion.div
                     key={project.slug}
@@ -151,12 +137,9 @@ export default function ProjectsPage() {
                       href={`/projects/${project.slug}`}
                       className="grid grid-cols-[3rem_1fr_auto_auto_auto_auto] gap-4 px-6 py-4 border-b border-[var(--border)] last:border-0 hover:bg-[rgba(56,189,248,0.03)] group transition-colors duration-200 items-center"
                     >
-                      {/* N° */}
                       <span className="text-xs font-mono text-[var(--muted)] tabular-nums">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-
-                      {/* Title */}
                       <div>
                         <p className="text-sm font-mono font-medium text-[var(--text)] group-hover:text-[var(--accent)] transition-colors duration-200">
                           {project.title}
@@ -165,8 +148,6 @@ export default function ProjectsPage() {
                           {project.subtitle}
                         </p>
                       </div>
-
-                      {/* Category */}
                       <span
                         className="text-xs font-mono px-2.5 py-1 rounded whitespace-nowrap"
                         style={{
@@ -175,10 +156,8 @@ export default function ProjectsPage() {
                           border: `1px solid ${accent}25`,
                         }}
                       >
-                        {categoryLabels[project.category] || project.category}
+                        {pp.category_labels[project.category as keyof typeof pp.category_labels] || project.category}
                       </span>
-
-                      {/* Tags */}
                       <div className="flex items-center gap-1 flex-wrap max-w-[180px]">
                         {project.tags.slice(0, 3).map((tag) => (
                           <span
@@ -198,14 +177,12 @@ export default function ProjectsPage() {
                           </span>
                         )}
                       </div>
-
-                      {/* Gouvernance */}
                       <div className="flex justify-center">
                         {project.dataGovernance ? (
                           <span
                             className="text-xs font-mono font-semibold"
                             style={{ color: "var(--accent3)" }}
-                            title="Gouvernance Data incluse"
+                            title={t.governance.label}
                           >
                             ✓
                           </span>
@@ -213,13 +190,11 @@ export default function ProjectsPage() {
                           <span className="text-xs font-mono text-[var(--border)]">—</span>
                         )}
                       </div>
-
-                      {/* Status */}
                       <div className="flex items-center justify-end gap-2">
-                        <StatusBadge status={project.status} />
-                        <span className="text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors duration-200 text-sm">
-                          ↗
+                        <span className={`text-[10px] font-mono font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full ${statusClass}`}>
+                          {statusLabel}
                         </span>
+                        <span className="text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors duration-200 text-sm">↗</span>
                       </div>
                     </Link>
                   </motion.div>
@@ -234,6 +209,7 @@ export default function ProjectsPage() {
           <AnimatePresence mode="popLayout">
             {filtered.map((project, index) => {
               const accent = getCategoryAccent(project.category);
+              const { label: statusLabel, className: statusClass } = statusMap[project.status];
               return (
                 <motion.div
                   key={project.slug}
@@ -244,9 +220,7 @@ export default function ProjectsPage() {
                   transition={{ duration: 0.3, delay: index * 0.04 }}
                 >
                   <Link href={`/projects/${project.slug}`} className="block">
-                    <div
-                      className="glass rounded-xl p-5 hover:border-[rgba(56,189,248,0.25)] transition-all duration-200 group relative overflow-hidden"
-                    >
+                    <div className="glass rounded-xl p-5 hover:border-[rgba(56,189,248,0.25)] transition-all duration-200 group relative overflow-hidden">
                       <div
                         className="absolute left-0 top-0 bottom-0 w-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                         style={{ background: accent }}
@@ -255,35 +229,24 @@ export default function ProjectsPage() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span
                             className="text-[10px] font-mono px-2 py-0.5 rounded"
-                            style={{
-                              color: accent,
-                              background: `${accent}12`,
-                              border: `1px solid ${accent}25`,
-                            }}
+                            style={{ color: accent, background: `${accent}12`, border: `1px solid ${accent}25` }}
                           >
-                            {categoryLabels[project.category]}
+                            {pp.category_labels[project.category as keyof typeof pp.category_labels]}
                           </span>
-                          <StatusBadge status={project.status} />
+                          <span className={`text-[10px] font-mono font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full ${statusClass}`}>
+                            {statusLabel}
+                          </span>
                         </div>
-                        <span className="text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors text-lg">
-                          ↗
-                        </span>
+                        <span className="text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors text-lg">↗</span>
                       </div>
-                      <h3 className="font-epilogue font-bold text-[var(--text)] mb-1 relative z-10">
-                        {project.title}
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--muted)] mb-3 relative z-10">
-                        {project.subtitle}
-                      </p>
+                      <h3 className="font-epilogue font-bold text-[var(--text)] mb-1 relative z-10">{project.title}</h3>
+                      <p className="text-xs font-mono text-[var(--muted)] mb-3 relative z-10">{project.subtitle}</p>
                       <div className="flex flex-wrap gap-1.5 relative z-10">
                         {project.tags.map((tag) => (
                           <span
                             key={tag}
                             className="text-[10px] font-mono px-2 py-0.5 rounded text-[var(--muted)]"
-                            style={{
-                              background: "rgba(30, 45, 64, 0.5)",
-                              border: "1px solid var(--border)",
-                            }}
+                            style={{ background: "rgba(30, 45, 64, 0.5)", border: "1px solid var(--border)" }}
                           >
                             {tag}
                           </span>
@@ -291,13 +254,9 @@ export default function ProjectsPage() {
                         {project.dataGovernance && (
                           <span
                             className="text-[10px] font-mono px-2 py-0.5 rounded font-semibold"
-                            style={{
-                              color: "var(--accent3)",
-                              background: "rgba(52,211,153,0.1)",
-                              border: "1px solid rgba(52,211,153,0.25)",
-                            }}
+                            style={{ color: "var(--accent3)", background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)" }}
                           >
-                            ✓ Gouvernance
+                            ✓ {t.governance.label}
                           </span>
                         )}
                       </div>
@@ -309,16 +268,9 @@ export default function ProjectsPage() {
           </AnimatePresence>
         </div>
 
-        {/* Empty state */}
         {filtered.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-20"
-          >
-            <p className="text-sm font-mono text-[var(--muted)]">
-              Aucun projet dans cette catégorie.
-            </p>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">
+            <p className="text-sm font-mono text-[var(--muted)]">{pp.no_results}</p>
           </motion.div>
         )}
       </div>

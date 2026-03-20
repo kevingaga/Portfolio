@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Project } from "@/data/projects";
 import StatBox from "./StatBox";
 import DataGovernanceBadge from "./DataGovernanceBadge";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type ProjectDetailProps = {
   project: Project;
@@ -12,37 +13,25 @@ type ProjectDetailProps = {
 
 function getCategoryAccent(category: string): string {
   switch (category) {
-    case "Data & Visualisation":
-      return "var(--accent)";
-    case "Data Engineering":
-      return "var(--accent2)";
-    case "Automatisation & IA":
-      return "var(--accent3)";
-    case "Applications Métier":
-      return "#f59e0b";
-    default:
-      return "var(--accent)";
+    case "Data & Visualisation": return "var(--accent)";
+    case "Data Engineering": return "var(--accent2)";
+    case "Automatisation & IA": return "var(--accent3)";
+    case "Applications Métier": return "#f59e0b";
+    default: return "var(--accent)";
   }
-}
-
-function StatusBadge({ status }: { status: Project["status"] }) {
-  const map = {
-    deployed: { label: "Déployé", className: "badge-deployed" },
-    wip: { label: "En cours", className: "badge-wip" },
-    archived: { label: "Archivé", className: "badge-archived" },
-  };
-  const { label, className } = map[status];
-  return (
-    <span
-      className={`text-xs font-mono font-semibold uppercase tracking-widest px-3 py-1 rounded-full ${className}`}
-    >
-      {label}
-    </span>
-  );
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
   const accentColor = getCategoryAccent(project.category);
+  const { t } = useLanguage();
+  const pd = t.project_detail;
+
+  const statusMap = {
+    deployed: { label: t.status.deployed, className: "badge-deployed" },
+    wip: { label: t.status.wip, className: "badge-wip" },
+    archived: { label: t.status.archived, className: "badge-archived" },
+  };
+  const { label: statusLabel, className: statusClass } = statusMap[project.status];
 
   return (
     <div className="min-h-screen pt-24 pb-20">
@@ -55,14 +44,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           className="flex items-center gap-2 mb-8 text-xs font-mono text-[var(--muted)]"
         >
           <Link href="/" className="hover:text-[var(--accent)] transition-colors">
-            Accueil
+            {pd.home}
           </Link>
           <span>/</span>
-          <Link
-            href="/projects"
-            className="hover:text-[var(--accent)] transition-colors"
-          >
-            Projets
+          <Link href="/projects" className="hover:text-[var(--accent)] transition-colors">
+            {pd.projects}
           </Link>
           <span>/</span>
           <span className="text-[var(--text)]">{project.title}</span>
@@ -86,7 +72,9 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             >
               {project.category}
             </span>
-            <StatusBadge status={project.status} />
+            <span className={`text-xs font-mono font-semibold uppercase tracking-widest px-3 py-1 rounded-full ${statusClass}`}>
+              {statusLabel}
+            </span>
             <span className="text-xs font-mono text-[var(--muted)]">
               {project.year}
             </span>
@@ -132,7 +120,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               className="glass rounded-xl p-6"
             >
               <h2 className="font-epilogue font-bold text-lg text-[var(--text)] mb-4 flex items-center gap-2">
-                <span style={{ color: accentColor }}>◆</span> Contexte
+                <span style={{ color: accentColor }}>◆</span> {pd.context}
               </h2>
               <p className="text-sm font-mono text-[var(--muted)] leading-relaxed">
                 {project.context}
@@ -147,7 +135,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               className="glass rounded-xl p-6"
             >
               <h2 className="font-epilogue font-bold text-lg text-[var(--text)] mb-4 flex items-center gap-2">
-                <span style={{ color: accentColor }}>◆</span> Solution
+                <span style={{ color: accentColor }}>◆</span> {pd.solution}
               </h2>
               <p className="text-sm font-mono text-[var(--muted)] leading-relaxed">
                 {project.solution}
@@ -162,13 +150,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <h2 className="font-epilogue font-bold text-lg text-[var(--text)] mb-4 flex items-center gap-2">
-                  <span className="text-[var(--accent3)]">◆</span> Gouvernance
-                  Data
+                  <span className="text-[var(--accent3)]">◆</span>{" "}
+                  {t.governance.label}
                 </h2>
-                <DataGovernanceBadge
-                  data={project.dataGovernance}
-                  variant="full"
-                />
+                <DataGovernanceBadge data={project.dataGovernance} variant="full" />
               </motion.section>
             )}
 
@@ -180,7 +165,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               className="glass rounded-xl p-6"
             >
               <h2 className="font-epilogue font-bold text-lg text-[var(--text)] mb-4 flex items-center gap-2">
-                <span style={{ color: accentColor }}>◆</span> Défis techniques
+                <span style={{ color: accentColor }}>◆</span> {pd.challenges}
               </h2>
               <ul className="space-y-3">
                 {project.challenges.map((challenge, i) => (
@@ -191,10 +176,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                     transition={{ delay: 0.5 + i * 0.08 }}
                     className="flex items-start gap-3 text-sm font-mono text-[var(--muted)] leading-relaxed"
                   >
-                    <span
-                      className="flex-shrink-0 mt-0.5 font-bold"
-                      style={{ color: accentColor }}
-                    >
+                    <span className="flex-shrink-0 mt-0.5 font-bold" style={{ color: accentColor }}>
                       ▸
                     </span>
                     {challenge}
@@ -214,7 +196,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               className="glass rounded-xl p-6"
             >
               <h3 className="font-epilogue font-bold text-sm text-[var(--text)] mb-4 uppercase tracking-widest">
-                Stack Technique
+                {pd.stack}
               </h3>
               <div className="space-y-2.5">
                 {project.stack.map((item, i) => (
@@ -260,10 +242,9 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                     boxShadow: `0 4px 20px ${accentColor}15`,
                   }}
                 >
-                  <span>↗</span> Voir la démo
+                  <span>↗</span> {pd.view_demo}
                 </a>
               )}
-
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}
@@ -275,15 +256,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                     border: "1px solid var(--border)",
                   }}
                 >
-                  <span>⌥</span> Code source
+                  <span>⌥</span> {pd.source_code}
                 </a>
               )}
-
               <Link
                 href="/projects"
                 className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl font-mono text-sm text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
               >
-                ← Tous les projets
+                {pd.all_projects}
               </Link>
             </motion.div>
 
@@ -295,7 +275,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               className="glass rounded-xl p-5"
             >
               <h3 className="font-epilogue font-bold text-xs text-[var(--muted)] mb-3 uppercase tracking-widest">
-                Technologies
+                {pd.technologies}
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {project.tags.map((tag) => (

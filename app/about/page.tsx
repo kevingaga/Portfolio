@@ -4,8 +4,12 @@ import { motion } from "framer-motion";
 import { profile } from "@/data/profile";
 import SkillBar from "@/components/SkillBar";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AboutPage() {
+  const { t, lang } = useLanguage();
+  const a = t.about;
+
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,10 +21,10 @@ export default function AboutPage() {
           className="mb-14"
         >
           <span className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest block mb-3">
-            À Propos
+            {a.label}
           </span>
           <h1 className="font-epilogue font-black text-4xl sm:text-5xl text-[var(--text)] tracking-tight">
-            Gwenaël LIGER
+            {a.page_title}
           </h1>
         </motion.div>
 
@@ -48,11 +52,11 @@ export default function AboutPage() {
                   GL
                 </div>
                 <h2 className="font-epilogue font-bold text-xl text-[var(--text)] leading-tight mb-2">
-                  Analyste de données.
+                  {a.headline_1}
                   <br />
-                  Développeur.
+                  {a.headline_2}
                   <br />
-                  Explorateur de systèmes complexes.
+                  {a.headline_3}
                 </h2>
                 <p className="text-xs font-mono text-[var(--muted)]">
                   {profile.location}
@@ -60,15 +64,70 @@ export default function AboutPage() {
               </div>
 
               {/* Bio */}
-              <div className="space-y-3 mb-5">
-                <p className="text-sm font-mono text-[var(--muted)] leading-relaxed">
-                  Data Analyst avec 4+ années d&apos;expérience dans des environnements exigeants — de la plateforme de fidélité corporate d&apos;Air France aux pipelines qualité de Sanofi. Je construis des systèmes data de bout en bout : ingestion, nettoyage, validation, visualisation.
+              <div className="space-y-4 mb-5">
+                {/* Bio paragraph 1 — highlight Air France, Sanofi, end-to-end */}
+                <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                  {lang === "en" ? (
+                    <>
+                      Data Analyst with{" "}
+                      <span className="text-[var(--accent)] font-semibold">4+ years</span>{" "}
+                      of experience in demanding environments — from{" "}
+                      <span className="text-[var(--accent)] font-semibold">Air France</span>
+                      &apos;s corporate loyalty platform to{" "}
+                      <span className="text-[var(--accent2)] font-semibold">Sanofi</span>
+                      &apos;s quality pipelines. I build{" "}
+                      <span className="text-[var(--text)] font-semibold">end-to-end data systems</span>
+                      : ingestion, cleaning, validation, visualization.
+                    </>
+                  ) : (
+                    <>
+                      Data Analyst avec{" "}
+                      <span className="text-[var(--accent)] font-semibold">4+ années</span>{" "}
+                      d&apos;expérience dans des environnements exigeants — de la plateforme de fidélité corporate d&apos;
+                      <span className="text-[var(--accent)] font-semibold">Air France</span>{" "}
+                      aux pipelines qualité de{" "}
+                      <span className="text-[var(--accent2)] font-semibold">Sanofi</span>
+                      . Je construis des{" "}
+                      <span className="text-[var(--text)] font-semibold">systèmes data de bout en bout</span>
+                      {" "}: ingestion, nettoyage, validation, visualisation.
+                    </>
+                  )}
                 </p>
-                <p className="text-sm font-mono text-[var(--muted)] leading-relaxed">
-                  Ma signature : la gouvernance data. Pas seulement des graphiques — des données traçables, documentées, fiables. Une donnée sans lineage est une opinion.
+
+                {/* Bio paragraph 2 — highlight data governance */}
+                <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                  {lang === "en" ? (
+                    <>
+                      My signature:{" "}
+                      <span className="text-[var(--accent3)] font-semibold">data governance</span>
+                      . Not just charts — traceable, documented, reliable data.{" "}
+                      <span className="text-[var(--text)] italic">Data without lineage is an opinion.</span>
+                    </>
+                  ) : (
+                    <>
+                      Ma signature :{" "}
+                      <span className="text-[var(--accent3)] font-semibold">la gouvernance data</span>
+                      . Pas seulement des graphiques — des données traçables, documentées, fiables.{" "}
+                      <span className="text-[var(--text)] italic">Une donnée sans lineage est une opinion.</span>
+                    </>
+                  )}
                 </p>
-                <p className="text-sm font-mono text-[var(--muted)] leading-relaxed">
-                  Pont naturel entre les équipes métier et techniques, je traduis les exigences fonctionnelles en spécifications actionnables, et les insights en décisions.
+
+                {/* Bio paragraph 3 — highlight bridge role */}
+                <p className="text-sm font-mono text-slate-300 leading-relaxed">
+                  {lang === "en" ? (
+                    <>
+                      A natural{" "}
+                      <span className="text-[var(--accent2)] font-semibold">bridge between business and technical teams</span>
+                      , I translate functional requirements into actionable specifications, and insights into decisions.
+                    </>
+                  ) : (
+                    <>
+                      Pont naturel entre les{" "}
+                      <span className="text-[var(--accent2)] font-semibold">équipes métier et techniques</span>
+                      , je traduis les exigences fonctionnelles en spécifications actionnables, et les insights en décisions.
+                    </>
+                  )}
                 </p>
               </div>
 
@@ -80,7 +139,7 @@ export default function AboutPage() {
                   borderLeft: "2px solid var(--accent)",
                 }}
               >
-                <p className="font-lora italic text-sm text-[var(--muted)] leading-relaxed">
+                <p className="font-lora italic text-sm text-slate-400 leading-relaxed">
                   &ldquo;{profile.tagline}&rdquo;
                 </p>
               </div>
@@ -94,12 +153,12 @@ export default function AboutPage() {
               className="glass rounded-xl p-6"
             >
               <h3 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-4">
-                Langues
+                {a.languages_label}
               </h3>
               <div className="space-y-3">
                 {profile.languages.map((lang, i) => (
                   <div key={i} className="flex items-center justify-between">
-                    <span className="text-sm font-mono text-[var(--text)]">
+                    <span className="text-sm font-mono text-[var(--text)] font-medium">
                       {lang.lang}
                     </span>
                     <span
@@ -125,13 +184,13 @@ export default function AboutPage() {
               className="glass rounded-xl p-6"
             >
               <h3 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-4">
-                Intérêts
+                {a.interests_label}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {profile.interests.map((interest, i) => (
                   <span
                     key={i}
-                    className="text-xs font-mono px-3 py-1.5 rounded-full text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200"
+                    className="text-xs font-mono px-3 py-1.5 rounded-full text-slate-300 hover:text-[var(--text)] transition-colors duration-200"
                     style={{
                       background: "rgba(30, 45, 64, 0.6)",
                       border: "1px solid var(--border)",
@@ -151,19 +210,19 @@ export default function AboutPage() {
               className="glass rounded-xl p-6"
             >
               <h3 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-4">
-                Contact
+                {a.contact_label}
               </h3>
               <div className="space-y-3">
                 <a
                   href={`mailto:${profile.email}`}
-                  className="flex items-center gap-3 text-sm font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200 group"
+                  className="flex items-center gap-3 text-sm font-mono text-slate-300 hover:text-[var(--accent)] transition-colors duration-200 group"
                 >
                   <span className="text-[var(--accent)] group-hover:scale-110 transition-transform">✉</span>
                   {profile.email}
                 </a>
                 <a
                   href={`tel:${profile.phone}`}
-                  className="flex items-center gap-3 text-sm font-mono text-[var(--muted)] hover:text-[var(--text)] transition-colors duration-200 group"
+                  className="flex items-center gap-3 text-sm font-mono text-slate-300 hover:text-[var(--text)] transition-colors duration-200 group"
                 >
                   <span className="text-[var(--muted)] group-hover:scale-110 transition-transform">☎</span>
                   {profile.phone}
@@ -172,7 +231,7 @@ export default function AboutPage() {
                   href={`https://${profile.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm font-mono text-[var(--muted)] hover:text-[var(--accent2)] transition-colors duration-200 group"
+                  className="flex items-center gap-3 text-sm font-mono text-slate-300 hover:text-[var(--accent2)] transition-colors duration-200 group"
                 >
                   <span className="text-[var(--accent2)] group-hover:scale-110 transition-transform">⊕</span>
                   LinkedIn ↗
@@ -181,14 +240,13 @@ export default function AboutPage() {
                   href={`https://${profile.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm font-mono text-[var(--muted)] hover:text-[var(--accent3)] transition-colors duration-200 group"
+                  className="flex items-center gap-3 text-sm font-mono text-slate-300 hover:text-[var(--accent3)] transition-colors duration-200 group"
                 >
                   <span className="text-[var(--accent3)] group-hover:scale-110 transition-transform">⌥</span>
                   GitHub ↗
                 </a>
               </div>
 
-              {/* CV button */}
               <div className="mt-5 pt-5 border-t border-[var(--border)]">
                 <a
                   href="/cv-gwenael-liger.pdf"
@@ -201,7 +259,7 @@ export default function AboutPage() {
                     boxShadow: "0 4px 20px rgba(56,189,248,0.08)",
                   }}
                 >
-                  <span>↓</span> Télécharger le CV (PDF)
+                  <span>↓</span> {a.download_cv}
                 </a>
               </div>
             </motion.div>
@@ -216,7 +274,7 @@ export default function AboutPage() {
               transition={{ duration: 0.5, delay: 0.15 }}
             >
               <h2 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-6">
-                Parcours professionnel
+                {a.career_label}
               </h2>
               <ExperienceTimeline />
             </motion.div>
@@ -229,7 +287,7 @@ export default function AboutPage() {
               className="glass rounded-xl p-7"
             >
               <h2 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-6">
-                Compétences techniques
+                {a.skills_label}
               </h2>
               <div className="space-y-5">
                 {profile.skills.map((skill, i) => (

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 type DataGovernanceData = {
   lineage?: string;
@@ -15,19 +16,23 @@ type DataGovernanceBadgeProps = {
   variant?: "full" | "compact";
 };
 
-const governanceItems = [
-  { key: "lineage", label: "Lineage", icon: "⟶" },
-  { key: "freshness", label: "Fraîcheur", icon: "⟳" },
-  { key: "quality", label: "Qualité", icon: "✓" },
-  { key: "documentation", label: "Documentation", icon: "⊡" },
-  { key: "monitoring", label: "Monitoring", icon: "◎" },
-] as const;
+const governanceKeys = ["lineage", "freshness", "quality", "documentation", "monitoring"] as const;
+const governanceIcons: Record<string, string> = {
+  lineage: "⟶",
+  freshness: "⟳",
+  quality: "✓",
+  documentation: "⊡",
+  monitoring: "◎",
+};
 
 export default function DataGovernanceBadge({
   data,
   variant = "compact",
 }: DataGovernanceBadgeProps) {
-  const presentItems = governanceItems.filter((item) => data[item.key]);
+  const { t } = useLanguage();
+  const g = t.governance;
+
+  const presentKeys = governanceKeys.filter((k) => data[k]);
 
   if (variant === "compact") {
     return (
@@ -41,20 +46,20 @@ export default function DataGovernanceBadge({
           }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent3)] animate-pulse" />
-          Gouvernance Data
+          {g.label}
         </span>
         <div className="flex items-center gap-1">
-          {presentItems.map((item) => (
+          {presentKeys.map((key) => (
             <span
-              key={item.key}
-              title={item.label}
+              key={key}
+              title={g.items[key]}
               className="text-[10px] font-mono px-1.5 py-0.5 rounded text-[var(--accent3)]"
               style={{
                 background: "rgba(52, 211, 153, 0.08)",
                 border: "1px solid rgba(52, 211, 153, 0.2)",
               }}
             >
-              {item.icon}
+              {governanceIcons[key]}
             </span>
           ))}
         </div>
@@ -62,7 +67,6 @@ export default function DataGovernanceBadge({
     );
   }
 
-  // Full variant for detail page
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -75,7 +79,6 @@ export default function DataGovernanceBadge({
         boxShadow: "0 0 30px rgba(52, 211, 153, 0.05)",
       }}
     >
-      {/* Header */}
       <div
         className="flex items-center gap-3 px-5 py-4"
         style={{
@@ -94,11 +97,10 @@ export default function DataGovernanceBadge({
             className="text-xs font-mono font-bold uppercase tracking-widest"
             style={{ color: "var(--accent3)" }}
           >
-            Gouvernance Data
+            {g.label}
           </h3>
           <p className="text-xs text-[var(--muted)] font-mono mt-0.5">
-            {presentItems.length} dimension{presentItems.length > 1 ? "s" : ""}{" "}
-            couverte{presentItems.length > 1 ? "s" : ""}
+            {g.dimensions(presentKeys.length)}
           </p>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
@@ -107,19 +109,18 @@ export default function DataGovernanceBadge({
             className="text-[10px] font-mono font-semibold uppercase tracking-widest"
             style={{ color: "var(--accent3)" }}
           >
-            Actif
+            {g.active}
           </span>
         </div>
       </div>
 
-      {/* Items */}
       <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {governanceItems.map((item, index) => {
-          const value = data[item.key];
+        {governanceKeys.map((key, index) => {
+          const value = data[key];
           if (!value) return null;
           return (
             <motion.div
-              key={item.key}
+              key={key}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.08 }}
@@ -134,14 +135,14 @@ export default function DataGovernanceBadge({
                   fontFamily: "monospace",
                 }}
               >
-                {item.icon}
+                {governanceIcons[key]}
               </div>
               <div>
                 <p
                   className="text-xs font-mono font-semibold uppercase tracking-wider mb-1"
                   style={{ color: "var(--accent3)" }}
                 >
-                  {item.label}
+                  {g.items[key]}
                 </p>
                 <p className="text-xs font-mono text-[var(--muted)] leading-relaxed">
                   {value}

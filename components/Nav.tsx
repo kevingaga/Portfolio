@@ -4,22 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-
-const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/projects", label: "Projets" },
-  { href: "/about", label: "À Propos" },
-];
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { href: "/", label: t.nav.home },
+    { href: "/projects", label: t.nav.projects },
+    { href: "/about", label: t.nav.about },
+  ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 30);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -74,13 +75,14 @@ export default function Nav() {
           })}
         </div>
 
-        {/* CTA Desktop */}
+        {/* Desktop right side */}
         <div className="hidden md:flex items-center gap-3">
+          <LanguageSwitcher />
           <a
             href="mailto:gwenael.liger@gmail.com"
-            className="text-sm font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200 underline-accent"
+            className="text-sm font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
           >
-            Contact
+            {t.nav.contact}
           </a>
         </div>
 
@@ -145,13 +147,15 @@ export default function Nav() {
                 initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: navLinks.length * 0.05 }}
+                className="flex items-center justify-between px-4 py-3"
               >
                 <a
                   href="mailto:gwenael.liger@gmail.com"
-                  className="block px-4 py-3 rounded-lg text-sm font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
+                  className="text-sm font-mono text-[var(--muted)] hover:text-[var(--accent)] transition-colors duration-200"
                 >
-                  Contact
+                  {t.nav.contact}
                 </a>
+                <LanguageSwitcher />
               </motion.div>
             </div>
           </motion.div>

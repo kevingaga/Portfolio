@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import Providers from "./providers";
 
 const epilogue = Epilogue({
   subsets: ["latin"],
@@ -29,10 +30,10 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "Gwenaël LIGER — Data Analyst",
   description:
-    "Portfolio de Gwenaël LIGER, Data Analyst spécialisé en gouvernance data, automatisation et visualisation. Ex Air France, Sanofi, Decathlon.",
+    "Portfolio of Gwenaël LIGER, Data Analyst specializing in data governance, automation and visualization. Ex Air France, Sanofi, Decathlon.",
   keywords: [
     "Data Analyst",
-    "Gouvernance Data",
+    "Data Governance",
     "Python",
     "SQL",
     "Power BI",
@@ -43,9 +44,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gwenaël LIGER — Data Analyst",
     description:
-      "Gouvernance data · Automatisation · Visualisation / Ex Air France · Sanofi · Decathlon",
+      "Data Governance · Automation · Visualization / Ex Air France · Sanofi · Decathlon",
     type: "website",
-    locale: "fr_FR",
+    locale: "en_US",
   },
 };
 
@@ -56,14 +57,16 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="fr"
+      lang="en"
       className={`${epilogue.variable} ${jetbrainsMono.variable} ${lora.variable}`}
     >
       <body className="min-h-screen flex flex-col antialiased">
-        <CustomCursor />
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <CustomCursor />
+          <Nav />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
