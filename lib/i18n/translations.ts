@@ -70,6 +70,7 @@ export const translations = {
         "Data Engineering": "Data Engineering",
         "Automatisation & IA": "Automation",
         "Applications Métier": "Business Apps",
+        "Jeux": "Jeux",
       },
     },
     status: {
@@ -204,6 +205,7 @@ export const translations = {
         "Data Engineering": "Data Engineering",
         "Automatisation & IA": "Automatisation",
         "Applications Métier": "Apps Métier",
+        "Jeux": "Jeux",
       },
     },
     status: {

@@ -20,6 +20,8 @@ function getCategoryAccent(category: string): string {
       return "var(--accent3)";
     case "Applications Métier":
       return "#f59e0b";
+    case "Jeux":
+      return "#a855f7";
     default:
       return "var(--accent)";
   }
@@ -35,6 +37,8 @@ function getCategoryLabel(category: string): string {
       return "RPA / IA";
     case "Applications Métier":
       return "Métier";
+    case "Jeux":
+      return "Jeux";
     default:
       return category;
   }
