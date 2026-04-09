@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/data/projects";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-type Category = "all" | "Data & Visualisation" | "Data Engineering" | "Automatisation & IA" | "Applications Métier";
+type Category = "all" | "Data & Visualisation" | "Data Engineering" | "Automatisation & IA" | "Applications Métier" | "Jeux";
 
 function getCategoryAccent(category: string): string {
   switch (category) {
@@ -14,6 +14,7 @@ function getCategoryAccent(category: string): string {
     case "Data Engineering": return "var(--accent2)";
     case "Automatisation & IA": return "var(--accent3)";
     case "Applications Métier": return "#f59e0b";
+    case "Jeux": return "#a855f7";
     default: return "var(--accent)";
   }
 }
@@ -29,6 +30,7 @@ export default function ProjectsPage() {
     { key: "Data Engineering", label: pp.category_labels["Data Engineering"] },
     { key: "Automatisation & IA", label: pp.category_labels["Automatisation & IA"] },
     { key: "Applications Métier", label: pp.category_labels["Applications Métier"] },
+    { key: "Jeux", label: pp.category_labels["Jeux"] },
   ];
 
   const filtered = projects.filter(

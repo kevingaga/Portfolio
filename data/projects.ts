@@ -175,4 +175,40 @@ export const projects: Project[] = [
       { name: "JUnit", role: "Tests" },
     ],
   },
+  {
+    slug: "clash-game",
+    priority: 5,
+    title: "Clash Game",
+    subtitle: "Idle Tower Defense — React · Vite",
+    category: "Jeux",
+    tags: ["React", "Vite", "Game Loop", "requestAnimationFrame", "SVG"],
+    status: "wip",
+    year: "2025",
+    description:
+      "Jeu idle tower defense en React : un axolotl archer défend son château contre des vagues de squelettes. Game loop à 60fps via requestAnimationFrame, système d'upgrades, format mobile paysage.",
+    context:
+      "Projet de game dev expérimental pour explorer les mécaniques de jeu idle en React pur — sans moteur, sans canvas. Objectif : boucle de gameplay fluide à 60fps, layout mobile-first.",
+    solution:
+      "Architecture basée sur des refs React pour le state temps-réel (évite les re-renders du game loop), rendu SVG pour les personnages, positionnement en coordonnées virtuelles (800 unités) converties en %. Upgrades avec coûts exponentiels.",
+    challenges: [
+      "Game loop à 60fps sans canvas — requestAnimationFrame + refs mutables",
+      "Positionnement responsive : système de coordonnées virtuelles → %",
+      "Gestion des collisions arrow/ennemi dans un rendu React",
+      "Layout plein-écran mobile paysage (100dvw × 100dvh)",
+    ],
+    results: [
+      "60fps stable",
+      "4 upgrades actives",
+      "Format mobile paysage",
+      "Axolotl SVG custom",
+    ],
+    stack: [
+      { name: "React 19", role: "UI + Game Loop" },
+      { name: "Vite", role: "Build" },
+      { name: "SVG", role: "Sprites" },
+      { name: "requestAnimationFrame", role: "60fps loop" },
+    ],
+    demoUrl: "https://clash-game-kevingaga-2956s-projects.vercel.app",
+    githubUrl: "https://github.com/kevingaga/clash-game",
+  },
 ];
