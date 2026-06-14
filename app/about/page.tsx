@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { profile } from "@/data/profile";
-import SkillBar from "@/components/SkillBar";
+import SkillGraph from "@/components/SkillGraph";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -289,11 +289,7 @@ export default function AboutPage() {
               <h2 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-6">
                 {a.skills_label}
               </h2>
-              <div className="space-y-5">
-                {profile.skills.map((skill, i) => (
-                  <SkillBar key={i} name={typeof skill.name === "string" ? skill.name : skill.name[lang]} level={skill.level} />
-                ))}
-              </div>
+              <SkillGraph />
             </motion.div>
           </div>
         </div>

@@ -117,6 +117,11 @@ export const translations = {
       download_cv: "Download CV (PDF)",
       career_label: "Professional Background",
       skills_label: "Technical Skills",
+      skill_categories: {
+        data: "Data & Analytics",
+        dev: "Engineering & Dev",
+        automation: "Automation & Governance",
+      },
       education_title: "Master — Business Intelligence & Management",
       education_school: "Université Champollion",
       education_location: "Albi, France",
@@ -253,6 +258,11 @@ export const translations = {
       download_cv: "Télécharger le CV (PDF)",
       career_label: "Parcours professionnel",
       skills_label: "Compétences techniques",
+      skill_categories: {
+        data: "Data & Analytics",
+        dev: "Ingénierie & Dév",
+        automation: "Automatisation & Gouvernance",
+      },
       education_title: "Master — Intelligence Économique & Management",
       education_school: "Université Champollion",
       education_location: "Albi, France",

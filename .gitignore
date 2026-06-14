@@ -29,3 +29,9 @@ yarn-error.log*
 .claude/
 
 .env*.local
+
+*storybook.log
+storybook-static
+
+# TypeScript incremental build cache
+*.tsbuildinfo
