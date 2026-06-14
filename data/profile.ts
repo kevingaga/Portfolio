@@ -36,14 +36,14 @@ export const profile = {
   },
 
   skills: [
-    { name: "Python / Pandas",   level: 90 },
-    { name: "SQL / PostgreSQL",  level: 85 },
-    { name: "Power BI / ECharts",level: 85 },
-    { name: "Next.js / React",   level: 75 },
-    { name: "Java",              level: 70 },
-    { name: "Playwright / RPA",  level: 70 },
-    { name: { en: "Data Governance", fr: "Gouvernance Data" }, level: 80 },
-  ],
+    { name: "Python / Pandas",   level: 90, category: "data" },
+    { name: "SQL / PostgreSQL",  level: 85, category: "data" },
+    { name: "Power BI / ECharts",level: 85, category: "data" },
+    { name: "Next.js / React",   level: 75, category: "dev" },
+    { name: "Java",              level: 70, category: "dev" },
+    { name: "Playwright / RPA",  level: 70, category: "automation" },
+    { name: { en: "Data Governance", fr: "Gouvernance Data" }, level: 80, category: "automation" },
+  ] as { name: string | { en: string; fr: string }; level: number; category: "data" | "dev" | "automation" }[],
 
   experiences: [
     {
