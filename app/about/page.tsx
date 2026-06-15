@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { profile } from "@/data/profile";
-import SkillGraph from "@/components/SkillGraph";
+import SkillGalaxy from "@/components/SkillGalaxy";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -280,17 +280,8 @@ export default function AboutPage() {
             </motion.div>
 
             {/* Skills */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="glass rounded-xl p-7"
-            >
-              <h2 className="text-xs font-mono text-[var(--muted)] uppercase tracking-widest mb-6">
-                {a.skills_label}
-              </h2>
-              <SkillGraph />
-            </motion.div>
+            <SkillGalaxy />
+            
           </div>
         </div>
       </div>

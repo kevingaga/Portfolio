@@ -1,7 +1,31 @@
 import React from 'react';
 import type { Preview } from '@storybook/nextjs-vite';
+import { Epilogue, JetBrains_Mono, Lora } from 'next/font/google';
 import { LanguageProvider } from '../lib/i18n/LanguageContext';
 import '../app/globals.css';
+
+// Same fonts as app/layout.tsx, so stories (and full pages) render with the
+// real typography instead of falling back to the generic families.
+const epilogue = Epilogue({
+  subsets: ['latin'],
+  variable: '--font-epilogue',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+});
+const lora = Lora({
+  subsets: ['latin'],
+  variable: '--font-lora',
+  display: 'swap',
+  weight: ['400', '500', '600'],
+});
+
+const fontVars = `${epilogue.variable} ${jetbrainsMono.variable} ${lora.variable}`;
 
 const preview: Preview = {
   parameters: {
@@ -34,14 +58,18 @@ const preview: Preview = {
     backgrounds: { value: 'dark' },
   },
   decorators: [
-    (Story) => (
-      <LanguageProvider>
-        {/* cursor:auto overrides the global `cursor:none` so Storybook stays usable */}
-        <div style={{ padding: '2rem', cursor: 'auto' }}>
-          <Story />
-        </div>
-      </LanguageProvider>
-    ),
+    (Story, context) => {
+      // Full pages (layout: 'fullscreen') render edge-to-edge; components get
+      // some breathing room. cursor:auto overrides the global `cursor:none`.
+      const fullscreen = context.parameters.layout === 'fullscreen';
+      return (
+        <LanguageProvider>
+          <div className={fontVars} style={{ padding: fullscreen ? 0 : '2rem', cursor: 'auto' }}>
+            <Story />
+          </div>
+        </LanguageProvider>
+      );
+    },
   ],
 };
 
